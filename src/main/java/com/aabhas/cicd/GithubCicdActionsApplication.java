@@ -1,5 +1,5 @@
 package com.aabhas.cicd;
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RestController;
 
 
 import org.springframework.boot.SpringApplication;
