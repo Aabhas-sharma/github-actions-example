@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @SpringBootApplication
 public class GithubCicdActionsApplication {
 
-        @GetMapping('/welcome')
+        @GetMapping("/welcome")
         public String welcome(){
 			return "Welcome to aabhas !";
 		}
