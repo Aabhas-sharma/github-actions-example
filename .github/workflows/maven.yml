@@ -26,7 +26,7 @@ jobs:
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
           image: aabhas2000/springboot-aabhas-test
-          tags: latest
+          tags: master
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
