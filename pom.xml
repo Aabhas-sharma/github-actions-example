@@ -38,5 +38,4 @@
 		</plugins>
 		<finalName>springboot-aabhas-test</finalName>
 	</build>
-
 </project>
