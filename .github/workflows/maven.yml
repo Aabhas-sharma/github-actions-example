@@ -39,7 +39,7 @@ jobs:
           else 
             BUILD_NUMBER=1
           fi
-          NEW_IMAGE_TAG=$IMAGE_NAME:$TAG_WITHOUT_BUILD_NUMBER.$BUILD_NUMBER
+          NEW_IMAGE_TAG=$TAG_WITHOUT_BUILD_NUMBER.$BUILD_NUMBER
           echo $NEW_IMAGE_TAG
           echo $NEW_IMAGE_TAG > artifact.txt
           echo "NEW_IMAGE_TAG=$NEW_IMAGE_TAG" >> $GITHUB_ENV
