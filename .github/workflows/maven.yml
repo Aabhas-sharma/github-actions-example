@@ -32,7 +32,7 @@ jobs:
 
           # Extract the latest tag matching the regex pattern
           LATEST_TAG=$(echo "$RESPONSE" | jq -r ".results[].name | select(. | test(\"$TAG_WITHOUT_BUILD_NUMBER\"))" | sort -rV | head -n 1)
-
+          echo "LATEST TAG : $LATEST_TAG"
           if [ -n "$LATEST_TAG" ]; then
             BUILD_NUMBER=$(echo "$LATEST_TAG" | awk -F '.' '{print $NF}')
             BUILD_NUMBER=$((BUILD_NUMBER + 1))
