@@ -3,8 +3,6 @@ name: Projest cicd flow
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
   build:
@@ -19,6 +17,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Define branch name and date in a variable
+      run: |
+          echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+          echo "DATE=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
+          echo "TAG=${{ env.BRANCH_NAME }}-${{ env.DATE }}" >> $GITHUB_ENV
     - name: Build with Maven
       run: mvn clean install
 
@@ -26,7 +29,7 @@ jobs:
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
           image: aabhas2000/springboot-aabhas-test
-          tags: master
+          tags: ${{ env.TAG }}
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
