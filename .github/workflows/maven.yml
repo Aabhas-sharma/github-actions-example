@@ -23,7 +23,26 @@ jobs:
           echo "DATE=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
 
     - name: ASSIGN TAG
-      run: echo "TAG=${{  env.BRANCH_NAME  }}-${{  env.DATE  }}" >> $GITHUB_ENV
+      run: |
+          IMAGE_NAME="aabhas2000/springboot-aabhas-test"
+          TAG_WITHOUT_BUILD_NUMBER="${{ env.BRANCH_NAME  }}-${{ env.DATE }}"
+          API_URL="https://hub.docker.com/v2/repositories/$IMAGE_NAME/tags/?page_size=10&ordering=last_updated"
+          AUTH_HEADER="Authorization: Bearer ${{ secrets.DOCKER_TOKEN }}"
+          RESPONSE=$(curl --location --header "$AUTH_HEADER" "$API_URL")
+
+          # Extract the latest tag matching the regex pattern
+          LATEST_TAG=$(echo "$RESPONSE" | jq -r ".results[].name | select(. | test(\"$TAG_WITHOUT_BUILD_NUMBER\"))" | sort -rV | head -n 1)
+
+          if [ -n "$LATEST_TAG" ]; then
+            BUILD_NUMBER=$(echo "$LATEST_TAG" | awk -F '.' '{print $NF}')
+            BUILD_NUMBER=$((BUILD_NUMBER + 1))
+          else
+            BUILD_NUMBER=1
+          fi
+          NEW_IMAGE_TAG=$IMAGE_NAME:$TAG_WITHOUT_BUILD_NUMBER.$BUILD_NUMBER
+          echo $NEW_IMAGE_TAG
+          echo $NEW_IMAGE_TAG > artifact.txt
+          echo "NEW_IMAGE_TAG=$NEW_IMAGE_TAG" >> $GITHUB_ENV
 
     - name: build
       run: mvn clean install
@@ -33,7 +52,7 @@ jobs:
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
         image: aabhas2000/springboot-aabhas-test
-        tags: ${{ env.TAG  }}
+        tags: ${{ env.NEW_IMAGE_TAG  }}
         registry: docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
