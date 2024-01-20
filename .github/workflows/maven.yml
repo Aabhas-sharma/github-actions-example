@@ -22,7 +22,7 @@ jobs:
           echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
           echo "DATE=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
           echo "TAG=$BRANCH_NAME-$DATE" >> $GITHUB_ENV
-          echo $BRANCH_NAME
+          echo $DATE
 
     - name: Build with Maven
       run: echo $TAG
